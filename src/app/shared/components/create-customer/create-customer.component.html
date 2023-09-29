@@ -1,0 +1,44 @@
+<div class="container mt-3">
+  <form [formGroup]="customerForm">
+    <div class="mb-3">
+      <label class="form-label">Title</label>
+      <input type="email" formControlName="title" class="form-control" />
+      <div *ngIf="checkErrors('title')" class="error-message">
+        {{ showErrorMessage("title") }}
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Email address</label>
+      <input type="email" formControlName="email" class="form-control" />
+      <div *ngIf="checkErrors('email')" class="error-message">
+        {{ showErrorMessage("email") }}
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Region</label>
+      <ngx-select
+        formControlName="region"
+        [allowClear]="true"
+        [items]="region"
+        optionValueField="optionId"
+        optionTextField="optionTitle"
+        placeholder="Select..."
+      >
+      </ngx-select>
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Country</label>
+      <ngx-select
+        formControlName="country"
+        [allowClear]="true"
+        [items]="countries"
+        optionValueField="optionId"
+        optionTextField="optionTitle"
+        placeholder="Select..."
+      >
+      </ngx-select>
+    </div>
+   
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>

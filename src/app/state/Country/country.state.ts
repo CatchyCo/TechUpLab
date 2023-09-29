@@ -1,6 +1,6 @@
 export interface CountryData {
-  countries: [];
+  countries: any;
 }
 export const initCountryState: CountryData = {
-  countries: []
+  countries:{}
 };

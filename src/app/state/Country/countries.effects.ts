@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { CountriesService } from '../countries.service';
 import { map, mergeMap } from 'rxjs';
 import { getCountryData, getCountryDataSuccess } from './country.action';
+import { CountryService } from 'src/app/service/country-service.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +10,7 @@ import { getCountryData, getCountryDataSuccess } from './country.action';
 export class CountryEffect {
   constructor(
     public action$: Actions,
-    public countryService: CountriesService
+    public countryService: CountryService
   ) {}
 
   fetchCountries$ = createEffect(() => {
@@ -19,9 +19,7 @@ export class CountryEffect {
       mergeMap(() => {
         return this.countryService.getCountries().pipe(
               map((data) => {
-                  console.log(data);
-           //       const countries = data['data']
-                  return getCountryDataSuccess({ countries: [data] });
+                  return getCountryDataSuccess({ countries: data });
               })
           );
       })

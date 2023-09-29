@@ -1,6 +1,7 @@
+import { countryReducer } from "../state/Country/country.reducer"
+import { CountryData } from "../state/Country/country.state"
 
-import { countryReducer } from "../state/country.reducer";
-import { CountryData } from "../state/country.state";
+
 
 export interface AppState{
     countries:CountryData
