@@ -6,38 +6,91 @@ import { getCountryData } from 'src/app/state/Country/country.action';
 import { getCountries } from 'src/app/state/Country/country.selector';
 import { AppState } from 'src/app/store/app.store';
 
+export interface CountryDataModel {
+  country: string;
+  region: string;
+}
+
+export interface Customer {
+  title: string;
+  email: string;
+  region: string;
+  country: string;
+}
+
 @Component({
   selector: 'app-create-customer',
   templateUrl: './create-customer.component.html',
   styleUrls: ['./create-customer.component.scss'],
 })
 export class CreateCustomerComponent implements OnInit {
-  constructor(public formBuilder: FormBuilder, public store:Store<AppState>,public countryService:CountryService) {
+  constructor(
+    public formBuilder: FormBuilder,
+    public store: Store<AppState>,
+    public countryService: CountryService
+  ) {
     this.customerForm = this.formBuilder.group({
       title: ['', [Validators.required]],
       email: ['', [Validators.email, Validators.required]],
       region: ['', [Validators.required]],
       country: ['', [Validators.required]],
     });
+
+    this.customerForm
+      .get('region')
+      ?.valueChanges.subscribe((selectedRegion) => {
+        if (selectedRegion && selectedRegion.length) {
+          this.countriesAsPerSelectedRegion = [];
+          this.countriesAsPerRegion.map((item) => {
+            if (item.region === selectedRegion) {
+              this.countriesAsPerSelectedRegion.push(item.country);
+            }
+          });
+        } else {
+          this.customerForm.get('country')?.patchValue('');
+          this.countriesAsPerSelectedRegion = this.countries;
+        }
+      });
+
+    this.customerForm
+      .get('country')
+      ?.valueChanges.subscribe((selectedCountry) => {
+        if (selectedCountry && selectedCountry.length) {
+          this.countriesAsPerRegion.map((item) => {
+            if (item.country === selectedCountry) {
+              this.customerForm.get('region')?.patchValue(item.region);
+              return;
+            }
+          });
+        }
+      });
   }
 
   public customerForm: FormGroup;
-  public countries:string[] = [];
-  public region:string[] = []
+  public countries: string[] = [];
+  public countriesAsPerSelectedRegion: string[] = [];
+  public region: string[] = [];
+  public countriesAsPerRegion: CountryDataModel[] = [];
 
   ngOnInit(): void {
     this.store.dispatch(getCountryData());
-    this.store.select(getCountries).pipe().subscribe(data =>{
-      if(Object.keys(data).length){
-        console.log(data['data'])
-       const regionData =  this.countryService.getCountryAndRegion(data['data']);
-       this.region = regionData['region'];
-       this.countries = regionData['countries']
-      }
-    })
-    }
-
-  
+    this.store
+      .select(getCountries)
+      .pipe()
+      .subscribe((data) => {
+        if (Object.keys(data).length) {
+          this.countriesAsPerRegion = JSON.parse(
+            JSON.stringify(Object.values(data['data']))
+          );
+          const regionData = this.countryService.getCountryAndRegion(
+            data['data']
+          );
+          this.region = regionData['region'];
+          this.countries = regionData['countries'];
+          this.countriesAsPerSelectedRegion = this.countries;
+        }
+      });
+  }
 
   public checkErrors(control: string) {
     return (
@@ -64,6 +117,12 @@ export class CreateCustomerComponent implements OnInit {
       case 'email': {
         return 'Please enter email';
       }
+      case 'country': {
+        return 'Please select country';
+      }
+      case 'region': {
+        return 'Please select region';
+      }
       default: {
         return '';
       }
@@ -79,5 +138,24 @@ export class CreateCustomerComponent implements OnInit {
         return '';
       }
     }
+  }
+
+  onSubmit() {
+    const customerData = {
+      title: this.customerForm.get('title')?.value,
+      email: this.customerForm.get('email')?.value,
+      region: this.customerForm.get('region')?.value,
+      country: this.customerForm.get('country')?.value,
+    };
+    let customerList: Customer[] = [];
+    if (localStorage.getItem('customerList')) {
+      customerList = JSON.parse(localStorage.getItem('customerList') || "[]");
+      customerList.push(customerData);
+      localStorage.setItem('customerList', JSON.stringify(customerList));
+    } else {
+      customerList.push(customerData);
+      localStorage.setItem('customerList', JSON.stringify(customerList));
+    }
+    this.customerForm.reset();
   }
 }

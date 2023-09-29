@@ -1,5 +1,5 @@
 <div class="container mt-3">
-  <form [formGroup]="customerForm">
+  <form [formGroup]="customerForm" (ngSubmit)="onSubmit()">
     <div class="mb-3">
       <label class="form-label">Title</label>
       <input type="email" formControlName="title" class="form-control" />
@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="mb-3">
-      <label for="exampleInputEmail1" class="form-label">Region</label>
+      <label  class="form-label">Region</label>
       <ngx-select
         formControlName="region"
         [allowClear]="true"
@@ -25,20 +25,25 @@
         placeholder="Select..."
       >
       </ngx-select>
+      <div *ngIf="checkErrors('region')" class="error-message">
+        {{ showErrorMessage("region") }}
+      </div>
     </div>
     <div class="mb-3">
-      <label for="exampleInputEmail1" class="form-label">Country</label>
+      <label  class="form-label">Country</label>
       <ngx-select
         formControlName="country"
         [allowClear]="true"
-        [items]="countries"
+        [items]="countriesAsPerSelectedRegion"
         optionValueField="optionId"
         optionTextField="optionTitle"
         placeholder="Select..."
       >
       </ngx-select>
+      <div *ngIf="checkErrors('country')" class="error-message">
+        {{ showErrorMessage("country") }}
+      </div>
     </div>
-   
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" [disabled]="customerForm.invalid" class="btn btn-primary">Submit</button>
   </form>
 </div>
