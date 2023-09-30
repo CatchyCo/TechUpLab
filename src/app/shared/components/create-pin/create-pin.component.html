@@ -1,1 +1,53 @@
-<p>create-pin works!</p>
+<div class="container mt-3">
+    <form [formGroup]="pinForm" (ngSubmit)="submit()" >
+      <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input type="email" formControlName="title" class="form-control" />
+        <div *ngIf="checkErrors('title')" class="error-message">
+          {{ showErrorMessage("title") }}
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Files</label><br>
+        <input type="file" ng2FileSelect [uploader]="uploader" style="display: none"  #fileInput>
+      <div class="btn-group" (click)="fileInput.click()">
+        <button type="button" class="btn btn-primary">
+          Add Documents
+        </button>
+      </div>
+      <div *ngIf="uploader.queue[0]">
+        {{uploader.queue[0].file.name}}
+      </div>
+      
+      </div>
+
+      <div ng2FileDrop
+                 [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
+                 (fileOver)="fileOverBase($event)"
+                 [uploader]="uploader"
+                 class="well my-drop-zone">
+                Base drop zone
+            </div>
+
+            <div *ngIf="uploader.queue[0]">
+              {{uploader.queue[0].file.name}}
+              {{uploader }}
+            </div>
+<!--  <div class="mb-3">
+    <label  class="form-label">Country</label>
+    <ngx-multiple-select 
+      formControlName="country"
+      [allowClear]="true"
+      [items]="countriesAsPerSelectedRegion"
+      optionValueField="optionId"
+      optionTextField="optionTitle"
+      placeholder="Select..."
+    >
+    </ngx-multiple-select>
+    <div *ngIf="checkErrors('country')" class="error-message">
+      {{ showErrorMessage("country") }}
+    </div>
+  </div> -->
+  <button type="submit"  class="btn btn-primary">Submit</button>
+    </form>
+  </div>
