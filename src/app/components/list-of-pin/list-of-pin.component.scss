@@ -1,0 +1,29 @@
+.container {
+  padding: 2rem 0rem;
+}
+
+h4 {
+  margin: 2rem 0rem 1rem;
+}
+
+.table-image {
+  td,
+  th {
+    vertical-align: middle;
+    .img-thumbnail {
+      width: 50%;
+      height: 50%;
+    }
+  }
+}
+
+.modal-1{
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  justify-content: center;
+  background: rgba(77, 77, 77, .7);
+  transition: all 4s;
+}

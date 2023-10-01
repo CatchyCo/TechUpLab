@@ -142,6 +142,7 @@ export class CreateCustomerComponent implements OnInit {
 
   onSubmit() {
     const customerData = {
+      id:0,
       title: this.customerForm.get('title')?.value,
       email: this.customerForm.get('email')?.value,
       region: this.customerForm.get('region')?.value,
@@ -149,13 +150,14 @@ export class CreateCustomerComponent implements OnInit {
     };
     let customerList: Customer[] = [];
     if (localStorage.getItem('customerList')) {
-      customerList = JSON.parse(localStorage.getItem('customerList') || "[]");
+      customerList = JSON.parse(localStorage.getItem('customerList') || '[]');
       customerList.push(customerData);
       localStorage.setItem('customerList', JSON.stringify(customerList));
     } else {
       customerList.push(customerData);
       localStorage.setItem('customerList', JSON.stringify(customerList));
     }
+    this.countryService.addCustomer(customerData)
     this.customerForm.reset();
   }
 }

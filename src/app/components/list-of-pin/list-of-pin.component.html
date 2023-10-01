@@ -1,1 +1,57 @@
-<p>list-of-pin works!</p>
+<div class="container">
+  <div class="row">
+    <div class="row">
+      <div class="col-6"></div>
+      <div class="col-5 text-end">
+        <button class="btn btn-primary" (click)="openModal('customerModal')" >+ Add Customer</button>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-6"></div>
+      <div class="col-5 text-end">
+        <button class="btn btn-primary" (click)="openModal('pinModal')">+ Add Pin</button>
+      </div>
+    </div>
+    <div class="offset-1 col-10">
+      <h3><b>List of Pins</b></h3>
+      <table class="table table-image table-border">
+        <thead>
+          <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Image</th>
+            <th scope="col">Collaboration</th>
+            <th scope="col">Privacy</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let pin of pinList">
+            <tr>
+              <td>{{ pin.title }}</td>
+              <td class="w-25">
+                <img [src]="pin.image" class="img-fluid img-thumbnail" />
+              </td>
+              <td>
+                <ul>
+                  <ng-container *ngFor="let collaborator of pin.collaboration">
+                    <li class="list-group-item">{{ collaborator }}</li>
+                  </ng-container>
+                </ul>
+              </td>
+              <td>{{ pin.gender }}</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="modal-1" *ngIf="showModal">
+  <app-open-modal (closeModal)="closeModal()"  >
+    <ng-container *ngIf="showCustomerModal" >
+     <app-create-customer></app-create-customer>
+    </ng-container>
+    <ng-container *ngIf="showPinModal" >
+  <app-create-pin></app-create-pin>
+    </ng-container>
+  </app-open-modal>
+</div>
