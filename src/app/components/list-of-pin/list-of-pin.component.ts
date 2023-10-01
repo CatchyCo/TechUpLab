@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { CountryService } from 'src/app/service/country-service.service';
+import { AppState } from 'src/app/store/app.store';
 
 @Component({
   selector: 'app-list-of-pin',
@@ -7,7 +9,7 @@ import { CountryService } from 'src/app/service/country-service.service';
   styleUrls: ['./list-of-pin.component.scss'],
 })
 export class ListOfPinComponent implements OnInit {
-  constructor(public countryService: CountryService) {}
+  constructor(public countryService: CountryService, public store: Store<AppState>) {}
 
   public pinList: any;
   public showModal: boolean = false;

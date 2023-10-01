@@ -5,6 +5,7 @@ import { CountryService } from 'src/app/service/country-service.service';
 import { getCountryData } from 'src/app/state/Country/country.action';
 import { getCountries } from 'src/app/state/Country/country.selector';
 import { AppState } from 'src/app/store/app.store';
+import { CustomerService } from '../../customer.service';
 
 export interface CountryDataModel {
   country: string;
@@ -27,7 +28,8 @@ export class CreateCustomerComponent implements OnInit {
   constructor(
     public formBuilder: FormBuilder,
     public store: Store<AppState>,
-    public countryService: CountryService
+    public countryService: CountryService,
+    public customerService:CustomerService
   ) {
     this.customerForm = this.formBuilder.group({
       title: ['', [Validators.required]],
@@ -159,7 +161,7 @@ export class CreateCustomerComponent implements OnInit {
       customerList.push(customerData);
       localStorage.setItem('customerList', JSON.stringify(customerList));
     }
-    this.countryService.addCustomer(customerData);
+    this.customerService.addCustomer(customerData);
     this.customerForm.reset();
     this.closeModal.emit();
   }

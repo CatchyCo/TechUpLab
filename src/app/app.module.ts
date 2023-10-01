@@ -13,6 +13,7 @@ import { AppReducer } from './store/app.store';
 import { CountryEffect } from './state/Country/countries.effects';
 import { SharedModule } from './shared/shared.module';
 import { environment } from 'src/environment/environment';
+import { CustomerEffect } from './state/Country/Customer/customer.effects';
 
 
 
@@ -31,7 +32,7 @@ import { environment } from 'src/environment/environment';
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     StoreModule.forRoot(AppReducer),
-    EffectsModule.forRoot([CountryEffect ])
+    EffectsModule.forRoot([CountryEffect, CustomerEffect ])
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,12 +1,11 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
 import { FileUploader } from 'ng2-file-upload';
 import { CountryService } from 'src/app/service/country-service.service';
+import { getCustomerData } from 'src/app/state/Country/Customer/customer.actions';
+import { AppState } from 'src/app/store/app.store';
+import { Customer } from '../../customer.service';
 
 function readBase64(file: Blob): Promise<any> {
   var reader = new FileReader();
@@ -47,11 +46,12 @@ export class CreatePinComponent implements OnInit {
 
   constructor(
     public formBuilder: FormBuilder,
-    public countryService: CountryService
+    public countryService: CountryService,
+    public store: Store<AppState>
   ) {
     this.pinForm = this.formBuilder.group({
       title: ['', [Validators.required]],
-      image: ['',[Validators.required]],
+      image: ['', [Validators.required]],
       collaboration: [[], [Validators.required]],
       privacy: ['Public', [Validators.required]],
     });
@@ -61,10 +61,10 @@ export class CreatePinComponent implements OnInit {
     this.fetchCustomers();
   }
 
-  public selectItems:any;
+  public selectItems: Customer[] | any;
   public pinForm: FormGroup;
   public hasAnotherDropZoneOver: boolean = false;
-  public dragMessage:string = "Drag/Drop here";
+  public dragMessage: string = 'Drag/Drop here';
 
   public checkErrors(control: string) {
     return (
@@ -73,17 +73,17 @@ export class CreatePinComponent implements OnInit {
   }
 
   public fileOverBase(e: any): void {
-    this.hasBaseDropZoneOver = e; 
+    this.hasBaseDropZoneOver = e;
   }
 
-  public fetchCustomers(){
-    this.countryService.getAddCustomer().subscribe(customer =>{
-      this.selectItems = customer.map((e) => {
-        const customer: any = e.payload.doc.data();
-        customer.id = e.payload.doc.id;
-        return customer;
-      });
-    })
+  public fetchCustomers() {
+    this.store.dispatch(getCustomerData());
+    this.store.select('customer').subscribe((data) => {
+      const pinList: Customer[] | any = data.customer;
+      if (pinList[0]) {
+        this.selectItems = pinList[0];
+      }
+    });
   }
 
   showErrorMessage(control: string) {
@@ -116,7 +116,6 @@ export class CreatePinComponent implements OnInit {
     disableMultipart: true,
   });
 
-
   public fileOverAnother(e: any): void {
     this.hasAnotherDropZoneOver = e;
   }
@@ -124,7 +123,7 @@ export class CreatePinComponent implements OnInit {
   public onFileSelected(event: any) {
     const file: File = event[0];
     readBase64(file).then((data: any) => {
-      this.dragMessage= file.name;
+      this.dragMessage = file.name;
       this.pinForm.get('image')?.patchValue(data);
     });
   }
@@ -138,7 +137,7 @@ export class CreatePinComponent implements OnInit {
       privacy: this.pinForm.get('privacy')?.value,
     };
     this.pinForm.reset();
-    this.dragMessage = "Drag/Drop here";
+    this.dragMessage = 'Drag/Drop here';
     this.countryService.addPinData(pinForm);
     this.closeModal.emit();
   }

@@ -4,13 +4,7 @@ import { CountryData } from '../state/Country/country.state';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable, of } from 'rxjs';
 
-export interface Customer {
-  title: any;
-  email: any;
-  region: any;
-  country: any;
-  id: any;
-}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -50,14 +44,7 @@ export class CountryService {
     };
   }
 
-  public addCustomer(customer: Customer) {
-    customer.id = this.firebaseStore.createId();
-    return of(this.firebaseStore.collection('/Customer').add(customer));
-  }
 
-  public getAddCustomer() {
-    return this.firebaseStore.collection('/Customer').snapshotChanges();
-  }
 
   public getPinData() {
     return this.firebaseStore.collection('/PinCollections').snapshotChanges();
