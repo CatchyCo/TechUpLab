@@ -14,6 +14,7 @@ import { CountryEffect } from './state/Country/countries.effects';
 import { SharedModule } from './shared/shared.module';
 import { environment } from 'src/environment/environment';
 import { CustomerEffect } from './state/Country/Customer/customer.effects';
+import { PinEffect } from './state/Country/PinData/pin.effects';
 
 
 
@@ -32,7 +33,7 @@ import { CustomerEffect } from './state/Country/Customer/customer.effects';
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     StoreModule.forRoot(AppReducer),
-    EffectsModule.forRoot([CountryEffect, CustomerEffect ])
+    EffectsModule.forRoot([CountryEffect, CustomerEffect, PinEffect ])
   ],
   providers: [],
   bootstrap: [AppComponent]
