@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -43,82 +43,53 @@ const URL = 'https://evening-anchorage-3159.herokuapp.com/api/';
 export class CreatePinComponent implements OnInit {
   hasBaseDropZoneOver: any;
 
+  @Output() public closeModal: EventEmitter<Event> = new EventEmitter<Event>();
+
   constructor(
     public formBuilder: FormBuilder,
     public countryService: CountryService
   ) {
     this.pinForm = this.formBuilder.group({
       title: ['', [Validators.required]],
-      image: [''],
+      image: ['',[Validators.required]],
       collaboration: [[], [Validators.required]],
-      gender : ['Public',[Validators.required]]
-    });
-    this.hasBaseDropZoneOver = false;
-
-    this.uploader = new FileUploader({
-      url: URL,
-      disableMultipart: true, // 'DisableMultipart' must be 'true' for formatDataFunction to be called.
-      formatDataFunctionIsAsync: true,
-      formatDataFunction: async (item: {
-        _file: { name: any; size: any; type: any };
-      }) => {
-        return new Promise((resolve, reject) => {
-          resolve({
-            name: item._file.name,
-            length: item._file.size,
-            contentType: item._file.type,
-            date: new Date(),
-          });
-        });
-      },
+      privacy: ['Public', [Validators.required]],
     });
     this.hasBaseDropZoneOver = false;
   }
   ngOnInit(): void {
-    let customerList = [];
-    if (localStorage.getItem('customerList')) {
-      customerList = JSON.parse(localStorage.getItem('customerList') || '[]');
-      this.pinForm.get('collaboration')?.patchValue(customerList);
-      this.selectItems = customerList;
-      console.log(customerList);
-    }
+    this.fetchCustomers();
   }
 
-  public selectItems = [];
+  public selectItems:any;
   public pinForm: FormGroup;
+  public hasAnotherDropZoneOver: boolean = false;
+  public dragMessage:string = "Drag/Drop here";
 
   public checkErrors(control: string) {
     return (
-      this.pinForm.get(control)?.errors && this.pinForm.get(control)?.touched
+      this.pinForm.get(control)?.invalid && this.pinForm.get(control)?.touched
     );
   }
 
   public fileOverBase(e: any): void {
-    this.hasBaseDropZoneOver = e;
+    this.hasBaseDropZoneOver = e; 
   }
 
-  fileToUpload: any;
-  imageUrl: any;
-
-  public handleFileInput(event: any) {
-    this.fileToUpload = event.target.files[0];
-
-    console.log(event.target.files[0], 'hangle');
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      console.log(reader.result);
-      this.pinForm.get('image')?.patchValue(reader.result);
-    };
+  public fetchCustomers(){
+    this.countryService.getAddCustomer().subscribe(customer =>{
+      this.selectItems = customer.map((e) => {
+        const customer: any = e.payload.doc.data();
+        customer.id = e.payload.doc.id;
+        return customer;
+      });
+    })
   }
 
   showErrorMessage(control: string) {
     let errorMsg = '';
     if (this.pinForm.get(control)?.hasError('required')) {
       errorMsg = this.controlRequiredErrorMessage(control);
-    } else if (this.pinForm.get(control)?.hasError('email')) {
-      errorMsg = this.controlPatternErrorMessage(control);
     }
     return errorMsg;
   }
@@ -128,52 +99,23 @@ export class CreatePinComponent implements OnInit {
       case 'title': {
         return 'Please enter title';
       }
-      case 'email': {
+      case 'image': {
         return 'Please enter email';
       }
-      case 'country': {
+      case 'collaboration': {
         return 'Please select country';
       }
-      case 'region': {
-        return 'Please select region';
-      }
       default: {
         return '';
       }
     }
-  }
-
-  controlPatternErrorMessage(control: string) {
-    switch (control) {
-      case 'email': {
-        return 'Please enter valid email';
-      }
-      default: {
-        return '';
-      }
-    }
-  }
-
-  submit() {
-    const pinForm = {
-      id: 0,
-      title: this.pinForm.get('title')?.value,
-      image: this.pinForm.get('image')?.value,
-      collaboration: this.pinForm.get('collaboration')?.value,
-      gender: this.pinForm.get('gender')?.value
-      
-    };
-
-    this.countryService.addPinData(pinForm);
   }
 
   public uploader: FileUploader = new FileUploader({
     url: URL,
     disableMultipart: true,
   });
-  public hasAnotherDropZoneOver: boolean = false;
 
-  fileObject: any;
 
   public fileOverAnother(e: any): void {
     this.hasAnotherDropZoneOver = e;
@@ -181,13 +123,23 @@ export class CreatePinComponent implements OnInit {
 
   public onFileSelected(event: any) {
     const file: File = event[0];
-
-    console.log(event[0], 'hangledsdsd');
-
-    console.log(file);
-
     readBase64(file).then((data: any) => {
+      this.dragMessage= file.name;
       this.pinForm.get('image')?.patchValue(data);
     });
+  }
+
+  public submit() {
+    const pinForm = {
+      id: 0,
+      title: this.pinForm.get('title')?.value,
+      image: this.pinForm.get('image')?.value,
+      collaboration: this.pinForm.get('collaboration')?.value,
+      privacy: this.pinForm.get('privacy')?.value,
+    };
+    this.pinForm.reset();
+    this.dragMessage = "Drag/Drop here";
+    this.countryService.addPinData(pinForm);
+    this.closeModal.emit();
   }
 }

@@ -5,7 +5,7 @@ import { CreatePinComponent } from './components/create-pin/create-pin.component
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSelectModule } from 'ngx-select-ex';
 import { FileUploadModule } from 'ng2-file-upload';
-import { OpenModalComponent } from './open-modal/open-modal.component';
+import { OpenModalComponent } from './components/open-modal/open-modal.component';
 
 
 const sharedComponents = [CreateCustomerComponent, CreatePinComponent, OpenModalComponent];

@@ -1,74 +1,87 @@
 <div class="container mt-3">
-  <form [formGroup]="pinForm" (ngSubmit)="submit()">
-    <div class="mb-3">
-      <label class="form-label">Title</label>
-      <input type="email" formControlName="title" class="form-control" />
-      <div *ngIf="checkErrors('title')" class="error-message">
-        {{ showErrorMessage("title") }}
+  <div class="row">
+    <div class="col"><h3>Create Pin</h3></div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <form [formGroup]="pinForm" (ngSubmit)="submit()">
+        <div class="mb-3">
+          <label class="form-label">Title</label>
+          <input type="email" formControlName="title" class="form-control" />
+          <div *ngIf="checkErrors('title')" class="error-message">
+            {{ showErrorMessage("title") }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+        <label class="form-label">Select Image</label>
+        <div
+          ng2FileDrop
+          #Image1
+          [ngClass]="{ 'nv-file-over': hasBaseDropZoneOver }"
+          (fileOver)="fileOverBase($event)"
+          [uploader]="uploader"
+          (onFileDrop)="onFileSelected($event)"
+          class="well my-drop-zone"
+        >
+          {{dragMessage}}
+        </div>
       </div>
-    </div>
 
-    <!--     <div class="mb-3">
-      <label class="form-label">Title</label>
-      <input #Image type="file" (change)="handleFileInput($event)" />
-      <div *ngIf="checkErrors('title')" class="error-message">
-        {{ showErrorMessage("title") }}
-      </div>
-    </div> -->
+        <div class="mb-3">
+          <label class="form-label">Collaboration</label>
+          <ngx-select
+            formControlName="collaboration"
+            [allowClear]="true"
+            [multiple]="true"
+            [items]="selectItems"
+            optionValueField="title"
+            optionTextField="title"
+            placeholder="Select..."
+          >
+          </ngx-select>
+          <div *ngIf="checkErrors('collaboration')" class="error-message">
+            {{ showErrorMessage("collaboration") }}
+          </div>
+        </div>
 
-    =================================
+        <div class="mb-3 row">
+          <div class="col-1">
+            <label >Privacy</label>
+          </div>
+          <div class=" offset-1 offset-sm-1 offset-xs-1 col-8">
+            <div class="form-check form-check-inline">
+              <input
+                formControlName="privacy"
+                class="form-check-input"
+                type="radio"
+                name="privacy"
+                id="inlineRadio1"
+                value="Public"
+              />
+              <label class="form-check-label" for="inlineRadio1">Public</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                formControlName="privacy"
+                class="form-check-input"
+                type="radio"
+                name="privacy"
+                id="inlineRadio2"
+                value="Private"
+              />
+              <label class="form-check-label" for="inlineRadio2">Private</label>
+            </div>
+          </div>
+          <div *ngIf="checkErrors('privacy')" class="error-message">
+            {{ showErrorMessage("privacy") }}
+          </div>
+        </div>
 
-    <div
-      ng2FileDrop
-      #Image1
-      [ngClass]="{ 'nv-file-over': hasBaseDropZoneOver }"
-      (fileOver)="fileOverBase($event)"
-      [uploader]="uploader"
-      (onFileDrop)="onFileSelected($event)"
-      class="well my-drop-zone"
-    >
-      Base drop zone
+        <div class="text-center mb-3 mt-1">
+          <button type="submit" [disabled]="pinForm.invalid" class="btn btn-danger">Submit</button>
+        </div>
+      </form>
     </div>
-
-    <div class="mb-3">
-      <label class="form-label">collaboration</label>
-      <ngx-select
-        formControlName="collaboration"
-        [allowClear]="true"
-        [multiple]="true"
-        [items]="selectItems"
-        optionValueField="title"
-        optionTextField="title"
-        placeholder="Select..."
-      >
-      </ngx-select>
-      <div *ngIf="checkErrors('collaboration')" class="error-message">
-        {{ showErrorMessage("collaboration") }}
-      </div>
-    </div>
-
-    <div class="form-check form-check-inline">
-      <input
-        formControlName="gender"
-        class="form-check-input"
-        type="radio"
-        name="gender"
-        id="inlineRadio1"
-        value="Public"
-      />
-      <label class="form-check-label" for="inlineRadio1">Public</label>
-    </div>
-    <div class="form-check form-check-inline">
-      <input
-        formControlName="gender"
-        class="form-check-input"
-        type="radio"
-        name="gender"
-        id="inlineRadio2"
-        value="Private"
-      />
-      <label class="form-check-label" for="inlineRadio2">Private</label>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
+  </div>
 </div>

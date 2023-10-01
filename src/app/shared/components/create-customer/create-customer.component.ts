@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { CountryService } from 'src/app/service/country-service.service';
@@ -65,6 +65,8 @@ export class CreateCustomerComponent implements OnInit {
         }
       });
   }
+
+  @Output() public closeModal: EventEmitter<Event> = new EventEmitter<Event>();
 
   public customerForm: FormGroup;
   public countries: string[] = [];
@@ -142,7 +144,7 @@ export class CreateCustomerComponent implements OnInit {
 
   onSubmit() {
     const customerData = {
-      id:0,
+      id: 0,
       title: this.customerForm.get('title')?.value,
       email: this.customerForm.get('email')?.value,
       region: this.customerForm.get('region')?.value,
@@ -157,7 +159,8 @@ export class CreateCustomerComponent implements OnInit {
       customerList.push(customerData);
       localStorage.setItem('customerList', JSON.stringify(customerList));
     }
-    this.countryService.addCustomer(customerData)
+    this.countryService.addCustomer(customerData);
     this.customerForm.reset();
+    this.closeModal.emit();
   }
 }

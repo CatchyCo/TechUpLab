@@ -14,13 +14,14 @@
     </div>
     <div class="offset-1 col-10">
       <h3><b>List of Pins</b></h3>
-      <table class="table table-image table-border">
-        <thead>
+      <div class="table-style">
+      <table class="table table-image table-border table-striped table-fixed">
+        <thead class="header">
           <tr>
-            <th scope="col">Title</th>
-            <th scope="col">Image</th>
-            <th scope="col">Collaboration</th>
-            <th scope="col">Privacy</th>
+            <th scope="col header">Title</th>
+            <th scope="col header">Image</th>
+            <th scope="col header">Collaboration</th>
+            <th scope="col header">Privacy</th>
           </tr>
         </thead>
         <tbody>
@@ -37,21 +38,22 @@
                   </ng-container>
                 </ul>
               </td>
-              <td>{{ pin.gender }}</td>
+              <td>{{ pin.privacy }}</td>
             </tr>
           </ng-container>
         </tbody>
       </table>
+      </div>
     </div>
   </div>
 </div>
 <div class="modal-1" *ngIf="showModal">
   <app-open-modal (closeModal)="closeModal()"  >
     <ng-container *ngIf="showCustomerModal" >
-     <app-create-customer></app-create-customer>
+     <app-create-customer (closeModal)="closeModal()" ></app-create-customer>
     </ng-container>
     <ng-container *ngIf="showPinModal" >
-  <app-create-pin></app-create-pin>
+  <app-create-pin (closeModal)="closeModal()" ></app-create-pin>
     </ng-container>
   </app-open-modal>
 </div>
