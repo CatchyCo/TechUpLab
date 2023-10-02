@@ -6,18 +6,7 @@ import { getCountryData } from 'src/app/state/Country/country.action';
 import { getCountries } from 'src/app/state/Country/country.selector';
 import { AppState } from 'src/app/store/app.store';
 import { CustomerService } from '../../customer.service';
-
-export interface CountryDataModel {
-  country: string;
-  region: string;
-}
-
-export interface Customer {
-  title: string;
-  email: string;
-  region: string;
-  country: string;
-}
+import { CountryDataModel, Customer } from '../../model/shared.mode';
 
 @Component({
   selector: 'app-create-customer',
@@ -96,6 +85,9 @@ export class CreateCustomerComponent implements OnInit {
       });
   }
 
+  /* 
+  Checks the form control has error or not.
+  */
   public checkErrors(control: string) {
     return (
       this.customerForm.get(control)?.errors &&
@@ -103,7 +95,11 @@ export class CreateCustomerComponent implements OnInit {
     );
   }
 
-  showErrorMessage(control: string) {
+  /* 
+  Return the Error message for form controls as per type
+  */
+
+  public showErrorMessage(control: string) {
     let errorMsg = '';
     if (this.customerForm.get(control)?.hasError('required')) {
       errorMsg = this.controlRequiredErrorMessage(control);
@@ -113,7 +109,11 @@ export class CreateCustomerComponent implements OnInit {
     return errorMsg;
   }
 
-  controlRequiredErrorMessage(control: string) {
+  /* 
+  Return the Error message for form-controls as per control
+  */
+
+  public controlRequiredErrorMessage(control: string) {
     switch (control) {
       case 'title': {
         return 'Please enter title';
@@ -133,7 +133,11 @@ export class CreateCustomerComponent implements OnInit {
     }
   }
 
-  controlPatternErrorMessage(control: string) {
+  /* 
+   Return the Error message for form-controls as per control input value
+  */
+
+  public controlPatternErrorMessage(control: string) {
     switch (control) {
       case 'email': {
         return 'Please enter valid email';
@@ -144,7 +148,11 @@ export class CreateCustomerComponent implements OnInit {
     }
   }
 
-  onSubmit() {
+  /* 
+  Final Sumbit form functions
+  */
+
+  public onSubmit() {
     const customerData = {
       id: 0,
       title: this.customerForm.get('title')?.value,

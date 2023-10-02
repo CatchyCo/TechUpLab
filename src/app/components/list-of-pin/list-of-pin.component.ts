@@ -18,7 +18,7 @@ export class ListOfPinComponent implements OnInit {
     public store: Store<AppState>
   ) {}
 
-  public pinList: any;
+  public pinList: Pin[] | any;
   public showModal: boolean = false;
   public showCustomerModal: boolean = false;
   public showPinModal: boolean = false;
@@ -27,6 +27,9 @@ export class ListOfPinComponent implements OnInit {
     this.fetchPins();
   }
 
+  /* 
+  Use to fetch the all the Pins records from Database
+  */
   public fetchPins() {
     this.store.dispatch(getPinData());
     this.store.select('pins').subscribe((data) => {
@@ -37,6 +40,9 @@ export class ListOfPinComponent implements OnInit {
     });
   }
 
+  /* 
+  Open the modal as per parameter
+  */
   public openModal(modalName: string) {
     this.showModal = true;
     if (modalName === 'customerModal') {
@@ -46,6 +52,9 @@ export class ListOfPinComponent implements OnInit {
     }
   }
 
+  /*  
+  Open the modal as per parameter
+  */
   public closeModal() {
     this.showModal = false;
     this.showCustomerModal = false;

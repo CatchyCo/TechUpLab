@@ -4,6 +4,7 @@
   </div>
   <div class="row">
     <div class="col">
+      <!-- Create New Pin Form  -->
       <form [formGroup]="pinForm" (ngSubmit)="submit()">
         <div class="mb-3">
           <label class="form-label">Title</label>
@@ -14,19 +15,19 @@
         </div>
 
         <div class="mb-3">
-        <label class="form-label">Select Image</label>
-        <div
-          ng2FileDrop
-          #Image1
-          [ngClass]="{ 'nv-file-over': hasBaseDropZoneOver }"
-          (fileOver)="fileOverBase($event)"
-          [uploader]="uploader"
-          (onFileDrop)="onFileSelected($event)"
-          class="well my-drop-zone"
-        >
-          {{dragMessage}}
+          <label class="form-label">Select Image</label>
+          <div
+            ng2FileDrop
+            #Image1
+            [ngClass]="{ 'nv-file-over': hasBaseDropZoneOver }"
+            (fileOver)="fileOverBase($event)"
+            [uploader]="uploader"
+            (onFileDrop)="onFileSelected($event)"
+            class="well my-drop-zone"
+          >
+            {{ dragMessage }}
+          </div>
         </div>
-      </div>
 
         <div class="mb-3">
           <label class="form-label">Collaboration</label>
@@ -47,9 +48,9 @@
 
         <div class="mb-3 row">
           <div class="col-1">
-            <label >Privacy</label>
+            <label>Privacy</label>
           </div>
-          <div class=" offset-1 offset-sm-1 offset-xs-1 col-8">
+          <div class="offset-1 offset-sm-1 offset-xs-1 col-8">
             <div class="form-check form-check-inline">
               <input
                 formControlName="privacy"
@@ -79,7 +80,13 @@
         </div>
 
         <div class="text-center mb-3 mt-1">
-          <button type="submit" [disabled]="pinForm.invalid" class="btn btn-danger">Submit</button>
+          <button
+            type="submit"
+            [disabled]="pinForm.invalid"
+            class="btn btn-danger"
+          >
+            Submit
+          </button>
         </div>
       </form>
     </div>

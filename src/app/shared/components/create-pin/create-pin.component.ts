@@ -7,6 +7,10 @@ import { AppState } from 'src/app/store/app.store';
 import { Customer } from '../../customer.service';
 import { PinService } from '../../pin.service';
 
+/* 
+Third party function to load files
+*/
+
 function readBase64(file: Blob): Promise<any> {
   var reader = new FileReader();
   var future = new Promise((resolve, reject) => {
@@ -40,10 +44,6 @@ const URL = 'https://evening-anchorage-3159.herokuapp.com/api/';
   styleUrls: ['./create-pin.component.scss'],
 })
 export class CreatePinComponent implements OnInit {
-  hasBaseDropZoneOver: any;
-
-  @Output() public closeModal: EventEmitter<Event> = new EventEmitter<Event>();
-
   constructor(
     public formBuilder: FormBuilder,
     public pinService: PinService,
@@ -65,17 +65,25 @@ export class CreatePinComponent implements OnInit {
   public pinForm: FormGroup;
   public hasAnotherDropZoneOver: boolean = false;
   public dragMessage: string = 'Drag/Drop here';
+  public hasBaseDropZoneOver: boolean;
 
+  @Output() public closeModal: EventEmitter<Event> = new EventEmitter<Event>();
+
+  /* 
+  Checks the form control has error or not.
+  */
   public checkErrors(control: string) {
     return (
       this.pinForm.get(control)?.invalid && this.pinForm.get(control)?.touched
     );
   }
 
+  /* Check the dragged files is hover the drop input/div  */
   public fileOverBase(e: any): void {
     this.hasBaseDropZoneOver = e;
   }
 
+  /* Use to fetch all the customers from Database */
   public fetchCustomers() {
     this.store.dispatch(getCustomerData());
     this.store.select('customer').subscribe((data) => {
@@ -86,6 +94,9 @@ export class CreatePinComponent implements OnInit {
     });
   }
 
+  /* 
+  Return the Error message for form controls as per type
+  */
   showErrorMessage(control: string) {
     let errorMsg = '';
     if (this.pinForm.get(control)?.hasError('required')) {
@@ -94,6 +105,9 @@ export class CreatePinComponent implements OnInit {
     return errorMsg;
   }
 
+  /* 
+  Return the Error message for form-controls as per control
+  */
   controlRequiredErrorMessage(control: string) {
     switch (control) {
       case 'title': {
@@ -111,15 +125,22 @@ export class CreatePinComponent implements OnInit {
     }
   }
 
+  /* 
+Third party function to load files
+*/
   public uploader: FileUploader = new FileUploader({
     url: URL,
     disableMultipart: true,
   });
 
+  /* Check the dragged files is hover the drop input/div  */
   public fileOverAnother(e: any): void {
     this.hasAnotherDropZoneOver = e;
   }
 
+  /* 
+Third party function to load files
+*/
   public onFileSelected(event: any) {
     const file: File = event[0];
     readBase64(file).then((data: any) => {
@@ -128,6 +149,9 @@ export class CreatePinComponent implements OnInit {
     });
   }
 
+  /* 
+  Final Sumbit form functions
+  */
   public submit() {
     const pinForm = {
       id: 0,
@@ -142,7 +166,3 @@ export class CreatePinComponent implements OnInit {
     this.closeModal.emit();
   }
 }
-
-
-
-
